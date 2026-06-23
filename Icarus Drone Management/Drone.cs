@@ -53,12 +53,20 @@ namespace Icarus_Drone_Management
         // private attributes with public getter and setter methods
         public string GetClientName()
         {
-            return clientName;
+            return this.clientName;
         }
 
         public void SetClientName(string clientName)
         {
-            this.clientName = clientName;
+            if (string.IsNullOrEmpty(clientName))
+            {
+                System.Globalization.TextInfo textInfo = new System.Globalization.CultureInfo("en-AU", false).TextInfo;
+                this.clientName = textInfo.ToTitleCase(clientName.Trim().ToLower());
+            }
+            else
+            {
+                this.clientName = clientName;
+            }
         }
 
         public string GetDroneModel()
@@ -89,7 +97,20 @@ namespace Icarus_Drone_Management
 
         public void SetServiceProblem(string value)
         {
-            serviceProblem = value.Substring(0, 1).ToUpper() + value.Substring(1);
+
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                this.serviceProblem = string.Empty;
+            }
+            else if (value.Length == 1)
+            {
+                this.serviceProblem = value.ToUpper();
+            }
+            else
+            {
+                // Capitalize the first letter and force the rest of the string to lowercase
+                this.serviceProblem = char.ToUpper(value[0]) + value.Substring(1).ToLower();
+            }
         }
 
         public double GetServiceCost()
